@@ -8,6 +8,7 @@ package ga.rugal.clustering;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -160,8 +161,7 @@ public class MainFrame extends javax.swing.JFrame
     {//GEN-HEADEREND:event_clusterButtonActionPerformed
         clean();
         System.out.println("Clustering Start:");
-        points.get(0).setBelongTo(currentClusterNumber++);
-        clustering(points.get(0));
+        clustering();
         print();
     }//GEN-LAST:event_clusterButtonActionPerformed
 
@@ -239,23 +239,34 @@ public class MainFrame extends javax.swing.JFrame
      *
      * @param nodes
      */
-    private void clustering(Circle current)
+    private void clustering()
     {
-        List<Circle> spreadList = spread(current);
+        LinkedList<Circle> bfsQueue = new LinkedList<>();
 
-        for (Circle sl : spreadList)
+        Circle free;
+        while ((free = getFirstFreeNode()) != null)
         {
-            clustering(sl);
+            free.setBelongTo(currentClusterNumber++);
+            bfsQueue.add(free);
+            while (!bfsQueue.isEmpty())
+            {
+                Circle current = bfsQueue.removeFirst();
+                bfsQueue.addAll(spread(current));
+            }
         }
+
+    }
+
+    private Circle getFirstFreeNode()
+    {
         for (Circle point : points)
         {
             if (point.isFree())
             {
-                point.setBelongTo(currentClusterNumber++);
-                clustering(point);
-                break;
+                return point;
             }
         }
+        return null;
     }
 
     private List<Circle> spread(Circle current)

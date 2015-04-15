@@ -61,13 +61,6 @@ public class Circle implements Comparable<Circle>
     }
 
     @Override
-    public int hashCode()
-    {
-        int hash = 7;
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object obj)
     {
         if (obj == null)
@@ -87,11 +80,7 @@ public class Circle implements Comparable<Circle>
         {
             return false;
         }
-        if (this.belongTo != other.belongTo)
-        {
-            return false;
-        }
-        return true;
+        return this.belongTo == other.belongTo;
     }
 
     @Override
