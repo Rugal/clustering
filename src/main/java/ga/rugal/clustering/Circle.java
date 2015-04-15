@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ga.rugal.clustering;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class Circle
+public class Circle implements Comparable<Circle>
 {
 
     public final int X;
@@ -97,6 +92,28 @@ public class Circle
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(Circle other)
+    {
+        if (this.X < other.X)
+        {
+            return -1;
+        }
+        if (this.X > other.X)
+        {
+            return 1;
+        }
+        if (this.Y < other.Y)
+        {
+            return -1;
+        }
+        if (this.Y > other.Y)
+        {
+            return 1;
+        }
+        return 0;
     }
 
 }

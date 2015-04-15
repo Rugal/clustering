@@ -6,7 +6,10 @@
 package ga.rugal.clustering;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -136,6 +139,7 @@ public class MainFrame extends javax.swing.JFrame
 
         drawPanel.getGraphics().drawRect(c.X, c.Y, 1, 1);
         drawPanel.getGraphics().drawOval(c.X - radius, c.Y - radius, 2 * radius, 2 * radius);
+        clusterButtonActionPerformed(null);
     }//GEN-LAST:event_drawPanelMouseClicked
 
     private void radiusButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_radiusButtonActionPerformed
@@ -154,8 +158,8 @@ public class MainFrame extends javax.swing.JFrame
 
     private void clusterButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_clusterButtonActionPerformed
     {//GEN-HEADEREND:event_clusterButtonActionPerformed
-        // TODO add your handling code here:
         clean();
+        System.out.println("Clustering Start:");
         points.get(0).setBelongTo(currentClusterNumber++);
         clustering(points.get(0));
         print();
@@ -239,7 +243,10 @@ public class MainFrame extends javax.swing.JFrame
     {
         List<Circle> spreadList = spread(current);
 
-        spreadList.stream().forEach(this::clustering);
+        for (Circle sl : spreadList)
+        {
+            clustering(sl);
+        }
         for (Circle point : points)
         {
             if (point.isFree())
@@ -271,15 +278,25 @@ public class MainFrame extends javax.swing.JFrame
         {
             point.setBelongTo(0);
         });
+        Collections.sort(points);
     }
 
     private void print()
     {
+        Set<Integer> clusterInAll = new HashSet<>();
         points.stream().forEach((point) ->
         {
+            clusterInAll.add(point.getBelongTo());
             System.out.println(point);
         });
-        System.out.println();
+        System.out.println("There are " + clusterInAll.size() + " clusters:");
+        clusterInAll.stream().forEach((c) ->
+        {
+            System.out.print(c);
+            System.out.print(" ");
+        });
+        System.out.println("\nClustering Complete\n");
+
     }
 
     /**
