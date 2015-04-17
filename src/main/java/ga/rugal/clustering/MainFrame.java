@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ga.rugal.clustering;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -137,10 +134,9 @@ public class MainFrame extends javax.swing.JFrame
     {//GEN-HEADEREND:event_drawPanelMouseClicked
         Circle c = new Circle(evt.getX(), evt.getY());
         points.add(c);
-
-        drawPanel.getGraphics().drawRect(c.X, c.Y, 1, 1);
-        drawPanel.getGraphics().drawOval(c.X - radius, c.Y - radius, 2 * radius, 2 * radius);
         clusterButtonActionPerformed(null);
+        draw();
+
     }//GEN-LAST:event_drawPanelMouseClicked
 
     private void radiusButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_radiusButtonActionPerformed
@@ -164,6 +160,18 @@ public class MainFrame extends javax.swing.JFrame
         clustering();
         print();
     }//GEN-LAST:event_clusterButtonActionPerformed
+
+    private void draw()
+    {
+        points.stream().forEach((point) ->
+        {
+            Graphics2D g2d = (Graphics2D) (drawPanel.getGraphics());
+            drawPanel.getGraphics().drawRect(point.X, point.Y, 1, 1);
+
+            g2d.setColor(colors[point.getBelongTo()]);
+            g2d.fillOval(point.X - radius, point.Y - radius, 2 * radius, 2 * radius);
+        });
+    }
 
     /**
      * @param args the command line arguments
@@ -350,6 +358,11 @@ public class MainFrame extends javax.swing.JFrame
     public static final int MAX_DIAMETER = 100;
 
     public static final int MIN_DIAMETER = 10;
+
+    private static final Color[] colors = new Color[]
+    {
+        Color.BLACK, Color.GREEN, Color.RED, Color.WHITE, Color.BLUE, Color.PINK, Color.ORANGE, Color.MAGENTA
+    };
 
     private int radius = 30;
 
