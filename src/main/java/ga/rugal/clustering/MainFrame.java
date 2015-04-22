@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -15,6 +17,8 @@ import java.util.Set;
  */
 public class MainFrame extends javax.swing.JFrame
 {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MainFrame.class.getName());
 
     /**
      * Creates new form MainFrame
@@ -41,7 +45,7 @@ public class MainFrame extends javax.swing.JFrame
         clusterButton = new javax.swing.JMenuItem();
         cleanButton = new javax.swing.JMenuItem();
         radiusButton = new javax.swing.JMenuItem();
-        authorMenu = new javax.swing.JMenu();
+        author = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -101,10 +105,17 @@ public class MainFrame extends javax.swing.JFrame
         });
         jMenu1.add(radiusButton);
 
-        jMenuBar1.add(jMenu1);
+        author.setText("author");
+        author.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                authorActionPerformed(evt);
+            }
+        });
+        jMenu1.add(author);
 
-        authorMenu.setText("Author");
-        jMenuBar1.add(authorMenu);
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -156,16 +167,22 @@ public class MainFrame extends javax.swing.JFrame
     private void clusterButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_clusterButtonActionPerformed
     {//GEN-HEADEREND:event_clusterButtonActionPerformed
         clean();
-        System.out.println("Clustering Start:");
+        LOG.info("Clustering Start:");
         clustering();
         print();
     }//GEN-LAST:event_clusterButtonActionPerformed
+
+    private void authorActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_authorActionPerformed
+    {//GEN-HEADEREND:event_authorActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(this, "Author: Yunheng Yao");
+    }//GEN-LAST:event_authorActionPerformed
 
     private void draw()
     {
         points.stream().forEach((point) ->
         {
             Graphics2D g2d = (Graphics2D) (drawPanel.getGraphics());
+//            g2d.setColor(colors[8 - point.getBelongTo()]);
             drawPanel.getGraphics().drawRect(point.X, point.Y, 1, 1);
 
             g2d.setColor(colors[point.getBelongTo()]);
@@ -306,15 +323,14 @@ public class MainFrame extends javax.swing.JFrame
         points.stream().forEach((point) ->
         {
             clusterInAll.add(point.getBelongTo());
-            System.out.println(point);
+            LOG.info(point.toString());
         });
-        System.out.println("There are " + clusterInAll.size() + " clusters:");
+        LOG.info("There are " + clusterInAll.size() + " clusters:");
         clusterInAll.stream().forEach((c) ->
         {
-            System.out.print(c);
-            System.out.print(" ");
+            LOG.info(c.toString());
         });
-        System.out.println("\nClustering Complete\n");
+        LOG.info("Clustering Complete\n");
 
     }
 
@@ -342,7 +358,7 @@ public class MainFrame extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu authorMenu;
+    private javax.swing.JMenuItem author;
     private javax.swing.JMenuItem cleanButton;
     private javax.swing.JMenuItem clusterButton;
     private javax.swing.JPanel drawPanel;

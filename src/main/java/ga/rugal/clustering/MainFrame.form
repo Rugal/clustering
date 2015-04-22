@@ -37,12 +37,15 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radiusButtonActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="author">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="author"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="authorActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="authorMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Author"/>
-          </Properties>
         </Menu>
       </SubComponents>
     </Menu>
