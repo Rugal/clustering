@@ -146,7 +146,9 @@ public class MainFrame extends javax.swing.JFrame
         Circle c = new Circle(evt.getX(), evt.getY());
         points.add(c);
         clusterButtonActionPerformed(null);
-        draw();
+        bordering();
+        drawCircle();
+        drawBorder();
 
     }//GEN-LAST:event_drawPanelMouseClicked
 
@@ -177,12 +179,49 @@ public class MainFrame extends javax.swing.JFrame
         javax.swing.JOptionPane.showMessageDialog(this, "Author: Yunheng Yao");
     }//GEN-LAST:event_authorActionPerformed
 
-    private void draw()
+    private void bordering()
+    {
+        //computing border
+        //draw border
+    }
+
+    private void drawBorder()
+    {
+        classes.stream().forEach((set) ->
+        {
+            for (Circle next : set)
+            {
+                for (Circle neighbor : fineNeighbor(set, next))
+                {
+                    double l = Math.sqrt(Math.pow(next.X - neighbor.X, 2) + Math.pow(next.Y - neighbor.Y, 2));
+                    double RX = (next.Y - neighbor.Y) * radius / l;
+                    double RY = (neighbor.X - next.X) * radius / l;
+                    int cx = (int) (RX + next.X);
+                    int cy = (int) (RY + next.Y);
+                    int dx = (int) (RX + neighbor.X);
+                    int dy = (int) (RY + neighbor.Y);
+                    drawPanel.getGraphics().drawLine(cx, cy, dx, dy);
+                }
+            }
+        });
+    }
+
+    private List<Circle> fineNeighbor(Set<Circle> set, Circle current)
+    {
+        List<Circle> value = new ArrayList<>();
+        //We need only border point, so this may cause problem.
+        set.stream().filter((c) -> (!current.equals(c) && current.isNearby(c, radius))).forEach((c) ->
+        {
+            value.add(c);
+        });
+        return value;
+    }
+
+    private void drawCircle()
     {
         points.stream().forEach((point) ->
         {
             Graphics2D g2d = (Graphics2D) (drawPanel.getGraphics());
-//            g2d.setColor(colors[8 - point.getBelongTo()]);
             drawPanel.getGraphics().drawRect(point.X, point.Y, 1, 1);
 
             g2d.setColor(colors[point.getBelongTo()]);
@@ -267,7 +306,7 @@ public class MainFrame extends javax.swing.JFrame
     private void clustering()
     {
         LinkedList<Circle> bfsQueue = new LinkedList<>();
-
+        classes.clear();
         Circle free;
         while ((free = getFirstFreeNode()) != null)
         {
@@ -276,10 +315,14 @@ public class MainFrame extends javax.swing.JFrame
             while (!bfsQueue.isEmpty())
             {
                 Circle current = bfsQueue.removeFirst();
+                if (classes.isEmpty() || classes.size() < currentClusterNumber)
+                {
+                    classes.add(new HashSet<>());
+                }
+                classes.get(free.getBelongTo() - 1).add(current);
                 bfsQueue.addAll(spread(current));
             }
         }
-
     }
 
     private Circle getFirstFreeNode()
@@ -377,9 +420,11 @@ public class MainFrame extends javax.swing.JFrame
 
     private static final Color[] colors = new Color[]
     {
-        Color.BLACK, Color.GREEN, Color.RED, Color.WHITE, Color.BLUE, Color.PINK, Color.ORANGE, Color.MAGENTA
+        Color.BLACK, Color.GREEN, Color.RED, Color.WHITE, Color.BLUE, Color.PINK, Color.ORANGE, Color.MAGENTA, Color.GRAY, Color.YELLOW
     };
 
     private int radius = 30;
+
+    private final List<Set<Circle>> classes = new ArrayList<>();
 
 }
